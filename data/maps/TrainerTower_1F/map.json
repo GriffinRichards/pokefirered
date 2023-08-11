@@ -27,7 +27,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "FLAG_TEMP_6"
+      "flag": "FLAG_TEMP_HIDE_TOWER_OWNER"
     },
     {
       "type": "object",
@@ -41,7 +41,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "TrainerTower_EventScript_DoublesTrainer1",
-      "flag": "FLAG_TEMP_2"
+      "flag": "FLAG_TEMP_HIDE_TOWER_TRAINER_DOUBLES1"
     },
     {
       "type": "object",
@@ -55,7 +55,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "TrainerTower_EventScript_SinglesTrainer",
-      "flag": "FLAG_TEMP_3"
+      "flag": "FLAG_TEMP_HIDE_TOWER_TRAINER_SINGLES"
     },
     {
       "type": "object",
@@ -69,7 +69,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "TrainerTower_EventScript_KnockoutTrainer",
-      "flag": "FLAG_TEMP_4"
+      "flag": "FLAG_TEMP_HIDE_TOWER_TRAINER_KNOCKOUT"
     },
     {
       "type": "object",
@@ -83,7 +83,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "TrainerTower_EventScript_DoublesTrainer2",
-      "flag": "FLAG_TEMP_5"
+      "flag": "FLAG_TEMP_HIDE_TOWER_TRAINER_DOUBLES2"
     }
   ],
   "warp_events": [

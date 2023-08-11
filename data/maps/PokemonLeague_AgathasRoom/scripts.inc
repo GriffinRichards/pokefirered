@@ -52,11 +52,11 @@ PokemonLeague_AgathasRoom_EventScript_Agatha::
 	famechecker FAMECHECKER_OAK, 4
 	call_if_unset FLAG_SYS_GAME_CLEAR, PokemonLeague_AgathasRoom_EventScript_Intro
 	call_if_set FLAG_SYS_GAME_CLEAR, PokemonLeague_AgathasRoom_EventScript_RematchIntro
-	setflag FLAG_TEMP_3
-	setflag FLAG_TEMP_5
+	setflag FLAG_TEMP_READY_DISABLE_LEAGUE_LIGHTING
+	setflag FLAG_TEMP_PAUSE_LEAGUE_LIGHTING
 	call_if_unset FLAG_SYS_CAN_LINK_WITH_RS, PokemonLeague_AgathasRoom_EventScript_Battle
 	call_if_set FLAG_SYS_CAN_LINK_WITH_RS, PokemonLeague_AgathasRoom_EventScript_Rematch
-	clearflag FLAG_TEMP_5
+	clearflag FLAG_TEMP_PAUSE_LEAGUE_LIGHTING
 	goto PokemonLeague_AgathasRoom_EventScript_DefeatedAgatha
 	end
 

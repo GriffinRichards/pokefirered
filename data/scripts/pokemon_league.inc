@@ -4,13 +4,13 @@ PokemonLeague_EventScript_OpenDoor::
 	playse SE_RS_DOOR
 	call PokemonLeague_EventScript_SetDoorOpen
 	special DrawWholeMapView
-	setflag FLAG_TEMP_4
+	setflag FLAG_TEMP_DISABLE_LEAGUE_LIGHTING
 	return
 
 PokemonLeague_EventScript_EnterRoom::
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkUp5
 	waitmovement 0
-	setflag FLAG_TEMP_2
+	setflag FLAG_TEMP_ENABLE_LEAGUE_LIGHTING
 	playse SE_UNLOCK
 	call PokemonLeague_EventScript_CloseEntry
 	special DrawWholeMapView
@@ -38,7 +38,7 @@ PokemonLeague_EventScript_OpenDoorLance::
 	setmetatile 6, 4, METATILE_PokemonLeague_Door_Top_Open, 1
 	setmetatile 6, 5, METATILE_PokemonLeague_Door_Mid_Open, 0
 	special DrawWholeMapView
-	setflag FLAG_TEMP_4
+	setflag FLAG_TEMP_DISABLE_LEAGUE_LIGHTING
 	return
 
 PokemonLeague_EventScript_SetDoorOpenLance::

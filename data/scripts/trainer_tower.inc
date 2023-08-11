@@ -4,12 +4,6 @@
 .equ LOCALID_TRAINER_KNOCKOUT, 4
 .equ LOCALID_TRAINER_DOUBLES2, 5
 
-.equ HIDE_TRAINER_DOUBLES1, FLAG_TEMP_2
-.equ HIDE_TRAINER_SINGLES,  FLAG_TEMP_3
-.equ HIDE_TRAINER_KNOCKOUT, FLAG_TEMP_4
-.equ HIDE_TRAINER_DOUBLES2, FLAG_TEMP_5
-.equ HIDE_OWNER,            FLAG_TEMP_6
-
 .equ DISABLE_SINGLES_TRIGGER,  VAR_TEMP_E
 .equ DISABLE_DOUBLES_TRIGGER,  VAR_TEMP_F
 
@@ -27,26 +21,26 @@ TrainerTower_OnTransition::
 	case CHALLENGE_TYPE_SINGLE, TrainerTower_EventScript_SetObjectsSingles
 	case CHALLENGE_TYPE_DOUBLE, TrainerTower_EventScript_SetObjectsDoubles
 	case CHALLENGE_TYPE_KNOCKOUT, TrainerTower_EventScript_SetObjectsKnockout
-	setflag HIDE_TRAINER_DOUBLES1
-	setflag HIDE_TRAINER_SINGLES
-	setflag HIDE_TRAINER_KNOCKOUT
-	setflag HIDE_TRAINER_DOUBLES2
+	setflag FLAG_TEMP_HIDE_TOWER_TRAINER_DOUBLES1
+	setflag FLAG_TEMP_HIDE_TOWER_TRAINER_SINGLES
+	setflag FLAG_TEMP_HIDE_TOWER_TRAINER_KNOCKOUT
+	setflag FLAG_TEMP_HIDE_TOWER_TRAINER_DOUBLES2
 	setvar DISABLE_SINGLES_TRIGGER, TRUE
 	setvar DISABLE_DOUBLES_TRIGGER, TRUE
 	end
 
 TrainerTower_EventScript_SetObjectsSingles::
-	setflag HIDE_TRAINER_DOUBLES1
-	setflag HIDE_TRAINER_KNOCKOUT
-	setflag HIDE_TRAINER_DOUBLES2
+	setflag FLAG_TEMP_HIDE_TOWER_TRAINER_DOUBLES1
+	setflag FLAG_TEMP_HIDE_TOWER_TRAINER_KNOCKOUT
+	setflag FLAG_TEMP_HIDE_TOWER_TRAINER_DOUBLES2
 	setvar DISABLE_DOUBLES_TRIGGER, TRUE
 	setobjectxyperm       LOCALID_TRAINER_SINGLES, 15, 13
 	setobjectmovementtype LOCALID_TRAINER_SINGLES, MOVEMENT_TYPE_FACE_LEFT
 	goto TrainerTower_EventScript_HideOwner
 
 TrainerTower_EventScript_SetObjectsDoubles::
-	setflag HIDE_TRAINER_SINGLES
-	setflag HIDE_TRAINER_KNOCKOUT
+	setflag FLAG_TEMP_HIDE_TOWER_TRAINER_SINGLES
+	setflag FLAG_TEMP_HIDE_TOWER_TRAINER_KNOCKOUT
 	setvar DISABLE_SINGLES_TRIGGER, TRUE
 	ttower_isfloorcleared
 	goto_if_eq VAR_RESULT, TRUE, TrainerTower_EventScript_SetObjectsDoublesAlreadyBeaten
@@ -65,7 +59,7 @@ TrainerTower_EventScript_SetObjectsDoublesAlreadyBeaten::
 
 @ Knockout challenge re-uses trainer objects
 TrainerTower_EventScript_SetObjectsKnockout::
-	setflag HIDE_TRAINER_DOUBLES2
+	setflag FLAG_TEMP_HIDE_TOWER_TRAINER_DOUBLES2
 	setvar DISABLE_DOUBLES_TRIGGER, TRUE
 	setobjectxyperm       LOCALID_TRAINER_DOUBLES1, 10, 10
 	setobjectmovementtype LOCALID_TRAINER_DOUBLES1, MOVEMENT_TYPE_FACE_DOWN
@@ -74,7 +68,7 @@ TrainerTower_EventScript_SetObjectsKnockout::
 	setobjectxyperm       LOCALID_TRAINER_KNOCKOUT, 10, 16
 	setobjectmovementtype LOCALID_TRAINER_KNOCKOUT, MOVEMENT_TYPE_FACE_UP
 TrainerTower_EventScript_HideOwner:
-	setflag HIDE_OWNER
+	setflag FLAG_TEMP_HIDE_TOWER_OWNER
 	end
 
 TrainerTower_OnFrame::

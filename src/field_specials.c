@@ -2103,7 +2103,10 @@ static const u16 sChampionRoomLightingPalettes[][16] = {
     INCBIN_U16("graphics/field_specials/champion_room_lighting_8.gbapal")
 };
 
-static const u8 sEliteFourLightingTimers[] = {
+#define MAX_LEAGUE_PAL_E4 (ARRAY_COUNT(sEliteFourLightingPalettes) - 1)
+#define MAX_LEAGUE_PAL_CHAMP (ARRAY_COUNT(sChampionRoomLightingPalettes) - 1)
+
+static const u8 sEliteFourLightingTimers[MAX_LEAGUE_PAL_E4] = {
     40,
     12,
     12,
@@ -2114,10 +2117,10 @@ static const u8 sEliteFourLightingTimers[] = {
     12,
     12,
     12,
-    12
+    12,
 };
 
-static const u8 sChampionRoomLightingTimers[] = {
+static const u8 sChampionRoomLightingTimers[MAX_LEAGUE_PAL_CHAMP] = {
     20,
      8,
      8,
@@ -2125,33 +2128,40 @@ static const u8 sChampionRoomLightingTimers[] = {
      8,
      8,
      8,
-     8
+     8,
 };
+
+#define PALSLOT_LEAGUE_LIGHTING  7
+
+#define tDelay     data[0]
+#define tPalIdx    data[1]
+#define tMaxPalIdx data[2]
 
 void DoPokemonLeagueLightingEffect(void)
 {
     u8 taskId = CreateTask(Task_RunPokemonLeagueLightingEffect, 8);
     s16 *data = gTasks[taskId].data;
-    if (FlagGet(FLAG_TEMP_3) == TRUE)
+    if (FlagGet(FLAG_TEMP_READY_DISABLE_LEAGUE_LIGHTING) == TRUE)
     {
         gTasks[taskId].func = Task_CancelPokemonLeagueLightingEffect;
     }
     else
     {
-        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(POKEMON_LEAGUE_CHAMPIONS_ROOM) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(POKEMON_LEAGUE_CHAMPIONS_ROOM))
+        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(POKEMON_LEAGUE_CHAMPIONS_ROOM)
+           && gSaveBlock1Ptr->location.mapNum == MAP_NUM(POKEMON_LEAGUE_CHAMPIONS_ROOM))
         {
-            data[0] = sChampionRoomLightingTimers[0];
-            data[2] = 8;
-            LoadPalette(sChampionRoomLightingPalettes[0], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+            tDelay = sChampionRoomLightingTimers[0];
+            tMaxPalIdx = MAX_LEAGUE_PAL_CHAMP;
+            LoadPalette(sChampionRoomLightingPalettes[0], BG_PLTT_ID(PALSLOT_LEAGUE_LIGHTING), PLTT_SIZE_4BPP);
         }
         else
         {
-            data[0] = sEliteFourLightingTimers[0];
-            data[2] = 11;
-            LoadPalette(sEliteFourLightingPalettes[0], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+            tDelay = sEliteFourLightingTimers[0];
+            tMaxPalIdx = MAX_LEAGUE_PAL_E4;
+            LoadPalette(sEliteFourLightingPalettes[0], BG_PLTT_ID(PALSLOT_LEAGUE_LIGHTING), PLTT_SIZE_4BPP);
         }
-        data[1] = 0;
-        ApplyGlobalTintToPaletteSlot(7, 1);
+        tPalIdx = 0;
+        ApplyGlobalTintToPaletteSlot(PALSLOT_LEAGUE_LIGHTING, 1);
     }
 }
 
@@ -2159,43 +2169,44 @@ static void Task_RunPokemonLeagueLightingEffect(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     if (!gPaletteFade.active
-     && FlagGet(FLAG_TEMP_2) != FALSE
-     && FlagGet(FLAG_TEMP_5) != TRUE
+     && FlagGet(FLAG_TEMP_ENABLE_LEAGUE_LIGHTING) != FALSE
+     && FlagGet(FLAG_TEMP_PAUSE_LEAGUE_LIGHTING) != TRUE
      && gGlobalFieldTintMode != QL_TINT_BACKUP_GRAYSCALE
-     && --data[0] == 0
+     && --tDelay == 0
     )
     {
-        if (++data[1] == data[2])
-            data[1] = 0;
+        if (++tPalIdx == tMaxPalIdx)
+            tPalIdx = 0;
 
-        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(POKEMON_LEAGUE_CHAMPIONS_ROOM) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(POKEMON_LEAGUE_CHAMPIONS_ROOM))
+        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(POKEMON_LEAGUE_CHAMPIONS_ROOM)
+           && gSaveBlock1Ptr->location.mapNum == MAP_NUM(POKEMON_LEAGUE_CHAMPIONS_ROOM))
         {
-            data[0] = sChampionRoomLightingTimers[data[1]];
-            LoadPalette(sChampionRoomLightingPalettes[data[1]], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+            tDelay = sChampionRoomLightingTimers[tPalIdx];
+            LoadPalette(sChampionRoomLightingPalettes[tPalIdx], BG_PLTT_ID(PALSLOT_LEAGUE_LIGHTING), PLTT_SIZE_4BPP);
         }
         else
         {
-            data[0] = sEliteFourLightingTimers[data[1]];
-            LoadPalette(sEliteFourLightingPalettes[data[1]], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+            tDelay = sEliteFourLightingTimers[tPalIdx];
+            LoadPalette(sEliteFourLightingPalettes[tPalIdx], BG_PLTT_ID(PALSLOT_LEAGUE_LIGHTING), PLTT_SIZE_4BPP);
         }
-        ApplyGlobalTintToPaletteSlot(7, 1);
+        ApplyGlobalTintToPaletteSlot(PALSLOT_LEAGUE_LIGHTING, 1);
     }
 }
 
 static void Task_CancelPokemonLeagueLightingEffect(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    if (FlagGet(FLAG_TEMP_4) != FALSE)
+    if (FlagGet(FLAG_TEMP_DISABLE_LEAGUE_LIGHTING) != FALSE)
     {
         if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(POKEMON_LEAGUE_CHAMPIONS_ROOM) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(POKEMON_LEAGUE_CHAMPIONS_ROOM))
-            LoadPalette(sChampionRoomLightingPalettes[8], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+            LoadPalette(sChampionRoomLightingPalettes[MAX_LEAGUE_PAL_CHAMP], BG_PLTT_ID(PALSLOT_LEAGUE_LIGHTING), PLTT_SIZE_4BPP);
         else
-            LoadPalette(sEliteFourLightingPalettes[11], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
-        ApplyGlobalTintToPaletteSlot(7, 1);
+            LoadPalette(sEliteFourLightingPalettes[MAX_LEAGUE_PAL_E4], BG_PLTT_ID(PALSLOT_LEAGUE_LIGHTING), PLTT_SIZE_4BPP);
+        ApplyGlobalTintToPaletteSlot(PALSLOT_LEAGUE_LIGHTING, 1);
+
         if (gPaletteFade.active)
-        {
-            BlendPalettes(0x00000080, 16, RGB_BLACK);
-        }
+            BlendPalettes(1 << PALSLOT_LEAGUE_LIGHTING, 16, RGB_BLACK);
+
         DestroyTask(taskId);
     }
 }
@@ -2203,10 +2214,12 @@ static void Task_CancelPokemonLeagueLightingEffect(u8 taskId)
 void StopPokemonLeagueLightingEffectTask(void)
 {
     if (FuncIsActiveTask(Task_RunPokemonLeagueLightingEffect) == TRUE)
-    {
         DestroyTask(FindTaskIdByFunc(Task_RunPokemonLeagueLightingEffect));
-    }
 }
+
+#undef tDelay
+#undef tPalIdx
+#undef tMaxPalIdx
 
 static const u8 sCapeBrinkCompatibleSpecies[] = {
     SPECIES_VENUSAUR,

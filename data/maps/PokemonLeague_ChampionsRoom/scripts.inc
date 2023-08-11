@@ -49,22 +49,22 @@ PokemonLeague_ChampionsRoom_OnFrame::
 PokemonLeague_ChampionsRoom_EventScript_EnterRoom::
 	lockall
 	textcolor NPC_TEXT_COLOR_MALE
-	setflag FLAG_TEMP_2
+	setflag FLAG_TEMP_ENABLE_LEAGUE_LIGHTING
 	applymovement OBJ_EVENT_ID_PLAYER, PokemonLeague_ChampionsRoom_Movement_PlayerEnter
 	waitmovement 0
 	delay 20
 	call_if_unset FLAG_SYS_GAME_CLEAR, PokemonLeague_ChampionsRoom_EventScript_Intro
 	call_if_set FLAG_SYS_GAME_CLEAR, PokemonLeague_ChampionsRoom_EventScript_RematchIntro
 	goto_if_questlog PokemonLeague_ChampionsRoom_EventScript_QuestLogEnd
-	setflag FLAG_TEMP_3
-	setflag FLAG_TEMP_5
+	setflag FLAG_TEMP_READY_DISABLE_LEAGUE_LIGHTING
+	setflag FLAG_TEMP_PAUSE_LEAGUE_LIGHTING
 	savebgm MUS_VICTORY_GYM_LEADER
 	call_if_unset FLAG_SYS_CAN_LINK_WITH_RS, PokemonLeague_ChampionsRoom_EventScript_Battle
 	call_if_set FLAG_SYS_CAN_LINK_WITH_RS, PokemonLeague_ChampionsRoom_EventScript_Rematch
-	setflag FLAG_TEMP_4
-	clearflag FLAG_TEMP_5
+	setflag FLAG_TEMP_DISABLE_LEAGUE_LIGHTING
+	clearflag FLAG_TEMP_PAUSE_LEAGUE_LIGHTING
 	setflag FLAG_DEFEATED_CHAMP
-	setflag FLAG_TEMP_4
+	setflag FLAG_TEMP_DISABLE_LEAGUE_LIGHTING
 	msgbox PokemonLeague_ChampionsRoom_Text_PostBattle
 	playbgm MUS_SLOW_PALLET, 0
 	addobject LOCALID_PROF_OAK
